@@ -58,6 +58,17 @@ class Scanner(private val source: String) {
                 if (match('/')) {
                     // skip comments
                     while (peek() != '\n' && !isAtEnd) advance()
+                } else if (match('*')) {
+                    if (!isAtEnd) advance() // current is moved to /[*]
+                    if (!isAtEnd) advance() // current is moved to /*[]
+                    while (!isAtEnd) {
+                        if (peek() == '*' && peekNext() == '/') {
+                            advance()
+                            advance()
+                        } else {
+                            advance()
+                        }
+                    }
                 } else {
                     addToken(if (match('=')) TokenType.SLASH_EQUAL else TokenType.SLASH)
                 }
@@ -135,7 +146,7 @@ class Scanner(private val source: String) {
     }
 
     private fun identifier() {
-        while(isAlphaNumeric(peek())) advance()
+        while (isAlphaNumeric(peek())) advance()
 
         val text = source.substring(start, current)
         val type = keywords[text] ?: TokenType.IDENTIFIER

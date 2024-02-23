@@ -65,4 +65,12 @@ class ScannerTest {
         assertEquals("var", tokens[0].lexeme)
         assertEquals(TokenType.EOF, tokens[1].type)
     }
+
+    @Test
+    fun multilineComment() {
+        val scanner = Scanner("/* multi\nline\ncomment*/")
+        val tokens = scanner.scanTokens()
+        assertEquals(1, tokens.size)
+        assertEquals(TokenType.EOF, tokens[0].type)
+    }
 }
