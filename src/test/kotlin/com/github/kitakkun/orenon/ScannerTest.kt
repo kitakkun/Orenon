@@ -35,4 +35,14 @@ class ScannerTest {
         assertEquals("Hello, World!", tokens[0].literal)
         assertEquals(TokenType.EOF, tokens[1].type)
     }
+
+    @Test
+    fun numberLiteral() {
+        val scanner = Scanner("123.55")
+        val tokens = scanner.scanTokens()
+        assertEquals(2, tokens.size)
+        assertEquals(TokenType.NUMBER, tokens[0].type)
+        assertEquals(123.55, tokens[0].literal)
+        assertEquals(TokenType.EOF, tokens[1].type)
+    }
 }

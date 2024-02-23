@@ -49,7 +49,13 @@ class Scanner(private val source: String) {
             '"' -> string()
 
             '\n' -> line++
-            else -> Orenon.error(line, "Unexpected character")
+            else -> {
+                if (isDigit(peek())) {
+                    number()
+                } else {
+                    Orenon.error(line, "Unexpected character")
+                }
+            }
         }
     }
 
@@ -59,6 +65,8 @@ class Scanner(private val source: String) {
         if (isAtEnd) return '\u0000'
         return source[current]
     }
+
+    private fun peekNext(): Char = source.getOrElse(current + 1) { '\u0000' }
 
     private fun addToken(type: TokenType, literal: Any? = null) {
         val text = source.substring(start, current)
@@ -90,4 +98,21 @@ class Scanner(private val source: String) {
         val value = source.substring(start + 1, current - 1)
         addToken(TokenType.STRING, value)
     }
+
+    private fun number() {
+        while (isDigit(peek())) advance()
+
+        if (peek() == '.' && isDigit(peekNext())) {
+            // consume the .
+            advance()
+            while (isDigit(peek())) advance()
+        }
+
+        addToken(TokenType.NUMBER, source.substring(start, current).toDouble())
+    }
+
+    // kotlin has built-in isDigit function,
+    // but it returns true even if the character is a full-width digit.
+    // It is not suitable for this scanner.
+    private fun isDigit(c: Char) = c in '0'..'9'
 }
