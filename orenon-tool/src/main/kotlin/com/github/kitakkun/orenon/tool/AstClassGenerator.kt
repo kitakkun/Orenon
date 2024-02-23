@@ -26,7 +26,7 @@ class AstClassGenerator {
         ExprClassSpec(
             name = "Literal",
             properties = mapOf(
-                "value" to Any::class.asClassName()
+                "value" to Any::class.asTypeName().copy(nullable = true),
             )
         ),
         ExprClassSpec(
@@ -40,7 +40,7 @@ class AstClassGenerator {
 
     data class ExprClassSpec(
         val name: String,
-        val properties: Map<String, ClassName>,
+        val properties: Map<String, TypeName>,
     )
 
     fun generate(): FileSpec {

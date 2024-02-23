@@ -21,7 +21,7 @@ public sealed class Expr {
     }
 
     public data class Literal(
-        public val `value`: Any,
+        public val `value`: Any?,
     ) : Expr() {
         override fun <R> accept(visitor: Expr.Visitor<R>): R = visitor.visitLiteralExpr(this)
     }
