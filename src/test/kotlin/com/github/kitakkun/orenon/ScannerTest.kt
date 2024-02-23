@@ -72,5 +72,16 @@ class ScannerTest {
         val tokens = scanner.scanTokens()
         assertEquals(1, tokens.size)
         assertEquals(TokenType.EOF, tokens[0].type)
+
+        val scanner2 = Scanner("/* /* nested */ */")
+        val tokens2 = scanner2.scanTokens()
+        println(tokens2)
+        assertEquals(1, tokens2.size)
+        assertEquals(TokenType.EOF, tokens2[0].type)
+
+        val scanner3 = Scanner("/* non-terminated")
+        val tokens3 = scanner3.scanTokens()
+        assertEquals(1, tokens3.size)
+        assertEquals(TokenType.EOF, tokens3[0].type)
     }
 }

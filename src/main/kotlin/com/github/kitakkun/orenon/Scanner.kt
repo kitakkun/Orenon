@@ -59,15 +59,19 @@ class Scanner(private val source: String) {
                     // skip comments
                     while (peek() != '\n' && !isAtEnd) advance()
                 } else if (match('*')) {
-                    if (!isAtEnd) advance() // current is moved to /[*]
-                    if (!isAtEnd) advance() // current is moved to /*[]
+                    var blockCommentCount = 1
                     while (!isAtEnd) {
-                        if (peek() == '*' && peekNext() == '/') {
-                            advance()
-                            advance()
-                        } else {
-                            advance()
+                        if (match('*') && match('/')) {
+                            blockCommentCount--
+                        } else if (match('/') && match('*')) {
+                            blockCommentCount++
                         }
+
+                        if (blockCommentCount == 0) {
+                            break
+                        }
+
+                        advance()
                     }
                 } else {
                     addToken(if (match('=')) TokenType.SLASH_EQUAL else TokenType.SLASH)
