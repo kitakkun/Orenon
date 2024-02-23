@@ -25,4 +25,14 @@ class ScannerTest {
         assertEquals(TokenType.RIGHT_BRACE, tokens[5].type)
         assertEquals(TokenType.EOF, tokens[6].type)
     }
+
+    @Test
+    fun stringLiteral() {
+        val scanner = Scanner("\"Hello, World!\"")
+        val tokens = scanner.scanTokens()
+        assertEquals(2, tokens.size)
+        assertEquals(TokenType.STRING, tokens[0].type)
+        assertEquals("Hello, World!", tokens[0].literal)
+        assertEquals(TokenType.EOF, tokens[1].type)
+    }
 }

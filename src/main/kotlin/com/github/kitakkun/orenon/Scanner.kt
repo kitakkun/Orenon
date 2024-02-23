@@ -46,6 +46,8 @@ class Scanner(private val source: String) {
                 // ignore whitespace
             }
 
+            '"' -> string()
+
             '\n' -> line++
             else -> Orenon.error(line, "Unexpected character")
         }
@@ -69,5 +71,23 @@ class Scanner(private val source: String) {
 
         current++
         return true
+    }
+
+    private fun string() {
+        while (peek() != '"' && !isAtEnd) {
+            if (peek() == '\n') line++
+            advance()
+        }
+
+        if (isAtEnd) {
+            Orenon.error(line, "Unterminated string")
+            return
+        }
+
+        // consume closing "
+        advance()
+
+        val value = source.substring(start + 1, current - 1)
+        addToken(TokenType.STRING, value)
     }
 }
