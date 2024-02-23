@@ -8,8 +8,8 @@ public sealed class Expr {
 
     public data class Binary(
         public val left: Expr,
-        public val right: Expr,
         public val `operator`: Token,
+        public val right: Expr,
     ) : Expr() {
         override fun <R> accept(visitor: Expr.Visitor<R>): R = visitor.visitBinaryExpr(this)
     }

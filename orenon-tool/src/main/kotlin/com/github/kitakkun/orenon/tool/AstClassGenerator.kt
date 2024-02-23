@@ -13,8 +13,8 @@ class AstClassGenerator {
             name = "Binary",
             properties = mapOf(
                 "left" to exprClassName,
-                "right" to exprClassName,
                 "operator" to tokenClassName,
+                "right" to exprClassName,
             )
         ),
         ExprClassSpec(
