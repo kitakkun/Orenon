@@ -1,6 +1,27 @@
 package com.github.kitakkun.orenon
 
 class Scanner(private val source: String) {
+    companion object {
+        private val keywords = mapOf(
+            "class" to TokenType.CLASS,
+            "super" to TokenType.SUPER,
+            "this" to TokenType.THIS,
+            "fun" to TokenType.FUN,
+            "return" to TokenType.RETURN,
+            "var" to TokenType.VAR,
+            "if" to TokenType.IF,
+            "else" to TokenType.ELSE,
+            "true" to TokenType.TRUE,
+            "false" to TokenType.FALSE,
+            "for" to TokenType.FOR,
+            "while" to TokenType.WHILE,
+            "nil" to TokenType.NIL,
+            "and" to TokenType.AND,
+            "or" to TokenType.OR,
+            "print" to TokenType.PRINT,
+        )
+    }
+
     private val tokens = mutableListOf<Token>()
     private var start = 0
     private var current = 0
@@ -52,6 +73,8 @@ class Scanner(private val source: String) {
             else -> {
                 if (isDigit(peek())) {
                     number()
+                } else if (isAlpha(peek())) {
+                    identifier()
                 } else {
                     Orenon.error(line, "Unexpected character")
                 }
@@ -111,8 +134,21 @@ class Scanner(private val source: String) {
         addToken(TokenType.NUMBER, source.substring(start, current).toDouble())
     }
 
+    private fun identifier() {
+        while(isAlphaNumeric(peek())) advance()
+
+        val text = source.substring(start, current)
+        val type = keywords[text] ?: TokenType.IDENTIFIER
+
+        addToken(type)
+    }
+
     // kotlin has built-in isDigit function,
     // but it returns true even if the character is a full-width digit.
     // It is not suitable for this scanner.
     private fun isDigit(c: Char) = c in '0'..'9'
+
+    private fun isAlpha(c: Char) = c in 'a'..'z' || c in 'A'..'Z' || c == '_'
+
+    private fun isAlphaNumeric(c: Char) = isAlpha(c) || isDigit(c)
 }
